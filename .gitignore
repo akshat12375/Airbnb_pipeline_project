@@ -1,1 +1,5 @@
 .venv
+pipeline_project_dbt/profiles.yml
+pipeline_project_dbt/target/
+pipeline_project_dbt/dbt_packages/
+pipeline_project_dbt/logs/

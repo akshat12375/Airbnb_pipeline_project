@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: source_stage                # Logical name for the dbt source
+    database: airbnb              # Database in your warehouse
+    schema: staging       # Schema in your warehouse
+    tables:
+      - name: bookings                # Name of the raw table
+      - name: hosts
+      - name: listings
