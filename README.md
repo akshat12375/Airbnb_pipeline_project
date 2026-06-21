@@ -190,6 +190,97 @@ This project is designed as a layered ELT pipeline. The flow is:
    - Downstream consumers can query the gold fact table and gold dimensions for analytics.
    - Validation is performed by dbt compile/run and by adding dedicated tests to model behavior.
 
+## Pipeline Architecture Diagram
+```mermaid
+flowchart TD
+    classDef source fill:#F9F,stroke:#333,stroke-width:1px,color:#111;
+    classDef bronze fill:#FFD47F,stroke:#D18B00,stroke-width:1px,color:#111;
+    classDef silver fill:#8FD1FF,stroke:#006DCC,stroke-width:1px,color:#111;
+    classDef gold fill:#A3FF8F,stroke:#0F8C2B,stroke-width:1px,color:#111;
+    classDef snapshot fill:#E29BFF,stroke:#6A00A1,stroke-width:1px,color:#111;
+    classDef orchestration fill:#FFB3C6,stroke:#A10037,stroke-width:1px,color:#111;
+    classDef monitoring fill:#FFC87B,stroke:#A15F00,stroke-width:1px,color:#111;
+
+    subgraph STORAGE[Cloud Storage & Snowflake Staging]
+        A1[Raw files in S3 / Azure Blob / GCS]
+        A2[Snowpipe / Event Notification]
+        A3[Staging tables<br/>source_stage.bookings, hosts, listings]
+    end
+
+    subgraph BRONZE[Bronze Layer]
+        B1[bronze_bookings<br/>Incremental table]
+        B2[bronze_hosts<br/>Incremental table]
+        B3[bronze_listings<br/>Incremental table]
+    end
+
+    subgraph SILVER[Silver Layer]
+        S1[silver_bookings<br/>Derived metrics]
+        S2[silver_hosts<br/>Response quality]
+        S3[silver_listings<br/>Price tags]
+    end
+
+    subgraph GOLD[Gold Layer]
+        G1[one_big_table<br/>Consolidated business table]
+        G2[fact<br/>Gold analytics fact]
+    end
+
+    subgraph SNAPSHOT[Snapshot Layer]
+        D1[dim_bookings<br/>SCD timeline]
+        D2[dim_hosts<br/>SCD timeline]
+        D3[dim_listings<br/>SCD timeline]
+    end
+
+    subgraph ORCH[Orchestration & CI/CD]
+        O1[dbt run / dbt snapshot / dbt test]
+        O2[Airflow / Prefect / Dagster / dbt Cloud]
+    end
+
+    subgraph OBS[Monitoring & Quality]
+        M1[Data quality tests]
+        M2[Lineage / docs / alerts]
+    end
+
+    A1 --> A2 --> A3
+    A3 --> B1
+    A3 --> B2
+    A3 --> B3
+    B1 --> S1
+    B2 --> S2
+    B3 --> S3
+    S1 --> G1
+    S2 --> G1
+    S3 --> G1
+    G1 --> G2
+    D1 --> G2
+    D2 --> G2
+    D3 --> G2
+    O2 --> O1
+    O1 --> A2
+    O1 --> B1
+    O1 --> B2
+    O1 --> B3
+    O1 --> S1
+    O1 --> S2
+    O1 --> S3
+    O1 --> D1
+    O1 --> D2
+    O1 --> D3
+    O1 --> G1
+    O1 --> G2
+    O1 --> M1
+    O1 --> M2
+    M1 --> O2
+    M2 --> O2
+
+    class A1,A2,A3 source;
+    class B1,B2,B3 bronze;
+    class S1,S2,S3 silver;
+    class G1,G2 gold;
+    class D1,D2,D3 snapshot;
+    class O1,O2 orchestration;
+    class M1,M2 monitoring;
+```
+
 ## Future Work
 These improvements are ideal next steps for making the pipeline production-ready and fully automated.
 
