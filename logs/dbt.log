@@ -1,0 +1,7 @@
+[0m17:55:30.910821 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x1135712b0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x1146aba10>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x1146ab6e0>]}
+
+
+============================== 17:55:30.915148 | 931f091c-130c-4bb5-b75a-a3a0a92f9896 ==============================
+[0m17:55:30.915148 [info ] [MainThread]: Running with dbt=1.11.11
+[0m17:55:30.915556 [debug] [MainThread]: running dbt with arguments {'cache_selected_only': 'False', 'debug': 'False', 'version_check': 'True', 'invocation_command': 'dbt init', 'log_cache_events': 'False', 'warn_error': 'None', 'indirect_selection': 'eager', 'fail_fast': 'False', 'target_path': 'None', 'printer_width': '80', 'use_experimental_parser': 'False', 'log_format': 'default', 'partial_parse': 'True', 'static_parser': 'True', 'profiles_dir': '/Users/akshatsrivastava/.dbt', 'use_colors': 'True', 'no_print': 'None', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'quiet': 'False', 'write_json': 'True', 'log_path': 'logs', 'send_anonymous_usage_stats': 'True', 'introspect': 'True', 'empty': 'None'}
+[0m17:55:30.925703 [info ] [MainThread]: Creating dbt configuration folder at /Users/akshatsrivastava/.dbt
