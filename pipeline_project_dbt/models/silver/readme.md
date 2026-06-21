@@ -81,3 +81,15 @@ Design Principles
 *   **Data Quality First:** Data is cleaned and validated before it is made available for analytics.
     
 *   **Scalability:** The layer is designed to efficiently handle increasing data volumes.
+
+Layer Comparison
+----------------
+
+The Silver layer is the refinement stage in the Medallion architecture. It differs from Bronze and Gold in these ways:
+
+*   **Purpose:** clean, standardize, and enrich raw Bronze data.
+*   **Transformation:** applies business rules, derives new columns, and normalizes formats.
+*   **Output:** Silver tables that are analytics-ready and reliable for Gold consumption.
+*   **Dependency:** consumes Bronze tables and prepares data for Gold joins and snapshots.
+
+The Silver layer balances data quality with performance, making it the core transformation stage.

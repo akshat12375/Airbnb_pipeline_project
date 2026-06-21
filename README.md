@@ -1,7 +1,7 @@
-# Airbnb Pipeline Repository
+# Airbnb Pipeline Project
 
 ## Overview
-This repository contains a dbt-based data pipeline for an Airbnb-style analytics workflow. The pipeline is built on Snowflake and organizes data into bronze, silver, and gold layers, with snapshots used to persist slowly changing dimensions.
+This project contains a dbt-based data pipeline for an Airbnb-style analytics workflow. The pipeline is built on Snowflake and organizes data into bronze, silver, and gold layers, with snapshots used to persist slowly changing dimensions.
 
 The project includes:
 - `pipeline_project_dbt/`: dbt project directory
@@ -282,52 +282,50 @@ flowchart TD
 ```
 
 ## Future Work
-These improvements are ideal next steps for making the pipeline production-ready and fully automated.
+This project will continue evolving into a fully automated Airbnb analytics pipeline.
 
 ### 1. Auto-ingest new files with Snowpipe and event notification
-- Use Snowpipe to continuously ingest files from cloud storage into Snowflake staging tables.
-- Configure Snowflake event notifications on file arrival in Amazon S3, Azure Blob Storage, or Google Cloud Storage.
-- Trigger Snowpipe automatically when new data files land, reducing manual load steps.
-- Keep the staging layer always up to date with near real-time ingestion.
+- We will use Snowpipe to continuously ingest files from cloud storage into Snowflake staging tables.
+- We will configure Snowflake event notifications on file arrival in Amazon S3, Azure Blob Storage, or Google Cloud Storage.
+- Snowpipe will trigger automatically when new data files land, minimizing manual load steps.
+- The staging layer will stay up to date with near real-time ingestion.
 
 ### 2. Orchestration
-- Add orchestration with dbt Cloud, Airflow, Prefect, Dagster, or Azure Data Factory.
-- Create a full pipeline DAG that runs in order:
+- We will orchestrate the pipeline using tools such as dbt Cloud, Airflow, Prefect, Dagster, or Azure Data Factory.
+- The pipeline DAG will run in order:
   1. file ingestion via Snowpipe
   2. bronze model refresh
   3. silver transformations
   4. snapshot refresh
   5. gold model build
   6. tests and documentation generation
-- Implement dependency-aware schedules and failure notifications.
+- We will add dependency-aware schedules and failure notifications.
 
 ### 3. Complex model tests and data quality
-- Add schema tests in `pipeline_project_dbt/tests/` for unique keys, not null, accepted values, and relationships.
-- Use data tests for business logic, e.g. verify that `TOTAL_AMOUNT` equals `NIGHTS_BOOKED * BOOKING_AMOUNT` where applicable.
-- Add snapshot tests for slowly changing dimensions.
-- Add severity-based validations and custom SQL tests for data completeness, freshness, and referential integrity.
+- We will implement schema tests in `pipeline_project_dbt/tests/` for unique keys, not null values, accepted values, and relationships.
+- We will add data tests for business logic, such as verifying `TOTAL_AMOUNT` equals `NIGHTS_BOOKED * BOOKING_AMOUNT`.
+- We will add snapshot tests for slowly changing dimensions.
+- We will introduce severity-based validations and custom SQL tests for data completeness, freshness, and referential integrity.
 
 ### 4. Data observability and monitoring
-- Implement monitoring for row counts, new record volume, and incremental load health.
-- Add dbt-expectations or other tooling to validate data quality automatically.
-- Configure alerts for schema drift, null-rate spikes, and failing pipelines.
+- We will monitor row counts, new record volume, and incremental load health.
+- We will add dbt-expectations or similar tooling to validate data quality automatically.
+- We will configure alerts for schema drift, null-rate spikes, and failing pipelines.
 
 ### 5. CI/CD and deployment
-- Add GitHub Actions or another CI pipeline to run `dbt parse`, `dbt test`, and `dbt build` on each PR.
-- Include deployment automation for production and staging Snowflake environments.
-- Validate model compilation and snapshot refreshes before merging changes.
+- We will implement GitHub Actions or another CI pipeline to run `dbt parse`, `dbt test`, and `dbt build` on each PR.
+- We will include deployment automation for production and staging Snowflake environments.
+- We will validate model compilation and snapshot refreshes before merging changes.
 
 ### 6. Metadata and documentation
-- Add dbt documentation with `dbt docs generate` and `dbt docs serve`.
-- Maintain a model catalog, description metadata, and column-level documentation.
-- Document expected data freshness, source ownership, and use cases for each layer.
+- We will add dbt documentation with `dbt docs generate` and `dbt docs serve`.
+- We will maintain a model catalog, description metadata, and column-level documentation.
+- We will document expected data freshness, source ownership, and use cases for each layer.
 
 ### 7. Architecture improvements
-- Consider converting gold snapshot dependencies into models if gold should be fully materialized by `dbt run`.
-- Add a separate `models/gold/dimensions/` folder for dimension models and a `models/gold/facts/` folder for fact tables.
-- Add modular macros and packages for reusable transformation logic across layers.
+- We will convert gold snapshot dependencies into models if the gold layer should be fully materialized by `dbt run`.
+- We will add a separate `models/gold/dimensions/` folder for dimension models and a `models/gold/facts/` folder for fact tables.
+- We will add modular macros and packages for reusable transformation logic across layers.
 
 ### 8. Security and governance
-- Remove hard-coded credentials from `profiles.yml`.
-- Use secure credential management via environment variables, secrets manager, or dbt Cloud.
-- Implement role-based access controls in Snowflake for staging, bronze, silver, and gold schemas.
+- We will implement role-based access controls in Snowflake for staging, bronze, silver, and gold schemas.
