@@ -12,6 +12,6 @@ WITH bookings AS
         BOOKING_STATUS,
         CREATED_AT
     FROM 
-        {{ ref('obt') }}
+        {{ ref('one_big_table') }}
 )
 SELECT * FROM bookings

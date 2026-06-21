@@ -15,6 +15,6 @@ WITH listings AS
         PRICE_PER_NIGHT_TAG,
         LISTING_CREATED_AT
     FROM 
-        {{ ref('obt') }}
+        {{ ref('one_big_table') }}
 )
 SELECT * FROM listings

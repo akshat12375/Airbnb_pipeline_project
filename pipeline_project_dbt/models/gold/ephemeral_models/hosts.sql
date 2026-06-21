@@ -14,6 +14,6 @@ WITH hosts AS
         RESPONSE_RATE_QUALITY,
         HOST_CREATED_AT
     FROM 
-        {{ ref('obt') }}
+        {{ ref('one_big_table') }}
 )
 SELECT * FROM hosts
