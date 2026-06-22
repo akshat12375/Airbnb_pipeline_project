@@ -1,0 +1,80 @@
+version: 2
+
+models:
+  - name: bronze_bookings
+    description: "Raw booking records ingested from source_stage.bookings"
+    columns:
+      - name: booking_id
+        tests:
+          - not_null:
+              severity: error
+          - unique:
+              severity: error
+      - name: created_at
+        tests:
+          - not_null:
+              severity: error
+    tests:
+      - non_negative:
+          column_names: [nights_booked, booking_amount, service_fee, cleaning_fee]
+          severity: error
+      - null_rate_below:
+          column_name: booking_id
+          max_null_fraction: 0.0
+          severity: error
+      - freshness_within:
+          timestamp_column: created_at
+          max_age_hours: 72
+          severity: warn
+
+  - name: bronze_hosts
+    description: "Raw host records ingested from source_stage.hosts"
+    columns:
+      - name: host_id
+        tests:
+          - not_null:
+              severity: error
+          - unique:
+              severity: error
+      - name: created_at
+        tests:
+          - not_null:
+              severity: error
+    tests:
+      - non_negative:
+          column_names: [response_rate]
+          severity: error
+      - null_rate_below:
+          column_name: host_id
+          max_null_fraction: 0.0
+          severity: error
+      - freshness_within:
+          timestamp_column: created_at
+          max_age_hours: 168
+          severity: warn
+
+  - name: bronze_listings
+    description: "Raw listing records ingested from source_stage.listings"
+    columns:
+      - name: listing_id
+        tests:
+          - not_null:
+              severity: error
+          - unique:
+              severity: error
+      - name: created_at
+        tests:
+          - not_null:
+              severity: error
+    tests:
+      - non_negative:
+          column_names: [price_per_night]
+          severity: error
+      - null_rate_below:
+          column_name: price_per_night
+          max_null_fraction: 0.1
+          severity: warn
+      - freshness_within:
+          timestamp_column: created_at
+          max_age_hours: 168
+          severity: warn

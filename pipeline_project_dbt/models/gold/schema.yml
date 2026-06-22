@@ -1,0 +1,73 @@
+version: 2
+
+models:
+  - name: one_big_table
+    description: "Consolidated business table joining silver outputs"
+    columns:
+      - name: booking_id
+        tests:
+          - not_null:
+              severity: error
+          - unique:
+              severity: error
+      - name: listing_id
+        tests:
+          - not_null:
+              severity: error
+      - name: host_id
+        tests:
+          - not_null:
+              severity: error
+    tests:
+      - relationships:
+          to: ref('silver_bookings')
+          field: booking_id
+          severity: error
+      - relationships:
+          to: ref('silver_listings')
+          field: listing_id
+          severity: error
+      - relationships:
+          to: ref('silver_hosts')
+          field: host_id
+          severity: error
+
+  - name: fact
+    description: "Gold fact table for analytics"
+    columns:
+      - name: booking_id
+        tests:
+          - not_null:
+              severity: error
+      - name: listing_id
+        tests:
+          - not_null:
+              severity: error
+      - name: host_id
+        tests:
+          - not_null:
+              severity: error
+    tests:
+      - relationships:
+          to: ref('dim_bookings')
+          field: booking_id
+          severity: error
+      - relationships:
+          to: ref('dim_listings')
+          field: listing_id
+          severity: error
+      - relationships:
+          to: ref('dim_hosts')
+          field: host_id
+          severity: error
+      - non_negative:
+          column_names: [total_amount, service_fee, cleaning_fee, price_per_night]
+          severity: error
+      - null_rate_below:
+          column_name: booking_id
+          max_null_fraction: 0.0
+          severity: error
+      - freshness_within:
+          timestamp_column: created_at
+          max_age_hours: 168
+          severity: warn

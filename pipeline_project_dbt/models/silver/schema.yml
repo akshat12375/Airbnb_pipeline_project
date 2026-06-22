@@ -1,0 +1,74 @@
+version: 2
+
+models:
+  - name: silver_bookings
+    description: "Refined booking records"
+    columns:
+      - name: booking_id
+        tests:
+          - not_null
+          - unique
+    tests:
+      - relationships:
+          to: ref('bronze_bookings')
+          field: booking_id
+          severity: error
+      - non_negative:
+          column_names: [nights_booked, total_amount, service_fee, cleaning_fee]
+          severity: error
+      - null_rate_below:
+          column_name: booking_id
+          max_null_fraction: 0.0
+          severity: error
+      - freshness_within:
+          timestamp_column: created_at
+          max_age_hours: 72
+          severity: warn
+
+  - name: silver_hosts
+    description: "Refined host records"
+    columns:
+      - name: host_id
+        tests:
+          - not_null
+          - unique
+    tests:
+      - relationships:
+          to: ref('bronze_hosts')
+          field: host_id
+          severity: error
+      - non_negative:
+          column_names: [response_rate]
+          severity: error
+      - null_rate_below:
+          column_name: host_id
+          max_null_fraction: 0.0
+          severity: error
+      - freshness_within:
+          timestamp_column: created_at
+          max_age_hours: 168
+          severity: warn
+
+  - name: silver_listings
+    description: "Refined listing records"
+    columns:
+      - name: listing_id
+        tests:
+          - not_null
+          - unique
+    tests:
+      - relationships:
+          to: ref('bronze_listings')
+          field: listing_id
+          severity: error
+      - non_negative:
+          column_names: [price_per_night]
+          severity: error
+      - null_rate_below:
+          column_name: price_per_night
+          max_null_fraction: 0.05
+          severity: warn
+      - freshness_within:
+          timestamp_column: created_at
+          max_age_hours: 168
+          severity: warn
