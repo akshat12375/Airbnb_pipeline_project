@@ -1,0 +1,59 @@
+flowchart TD
+    classDef storage fill:#ffe7a3,stroke:#d18400,color:#333;
+    classDef bronze fill:#ffddb5,stroke:#d18b00,color:#333;
+    classDef silver fill:#9dd9ff,stroke:#006db3,color:#111;
+    classDef gold fill:#a4f4a5,stroke:#0b8d3d,color:#111;
+    classDef snapshot fill:#d7b3ff,stroke:#7c33a8,color:#111;
+    classDef orchestration fill:#ffb8d0,stroke:#b31a66,color:#111;
+
+    A1[Cloud Storage\nS3 / Azure Blob / GCS]:::storage
+    A2[Snowpipe + Events]:::storage
+    A3[Staging tables\nsource_stage]:::storage
+
+    B1[bronze_bookings\nraw ingestion]:::bronze
+    B2[bronze_hosts\nraw ingestion]:::bronze
+    B3[bronze_listings\nraw ingestion]:::bronze
+
+    S1[silver_bookings\nenrichment]:::silver
+    S2[silver_hosts\nstandardization]:::silver
+    S3[silver_listings\nprice tagging]:::silver
+
+    G1[one_big_table\nconsolidated fact]:::gold
+    G2[fact\nanalytics-ready]:::gold
+
+    D1[dim_bookings\nsnapshot]:::snapshot
+    D2[dim_hosts\nsnapshot]:::snapshot
+    D3[dim_listings\nsnapshot]:::snapshot
+
+    O1[dbt run / dbt snapshot / dbt test]:::orchestration
+    O2[Airflow / Prefect / Dagster / dbt Cloud]:::orchestration
+    O3[Monitoring, Alerts, CI/CD]:::orchestration
+
+    A1 --> A2 --> A3
+    A3 --> B1
+    A3 --> B2
+    A3 --> B3
+    B1 --> S1
+    B2 --> S2
+    B3 --> S3
+    S1 --> G1
+    S2 --> G1
+    S3 --> G1
+    G1 --> G2
+    D1 --> G2
+    D2 --> G2
+    D3 --> G2
+    O2 --> O1
+    O1 --> A2
+    O1 --> B1
+    O1 --> B2
+    O1 --> B3
+    O1 --> S1
+    O1 --> S2
+    O1 --> S3
+    O1 --> D1
+    O1 --> D2
+    O1 --> D3
+    O1 --> G1
+    O1 --> G2
+    O1 --> O3

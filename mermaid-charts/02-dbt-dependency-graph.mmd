@@ -1,0 +1,52 @@
+flowchart TD
+    classDef source fill:#fff2b2,stroke:#d1a200,color:#111;
+    classDef bronze fill:#ffe0cc,stroke:#d17a00,color:#111;
+    classDef silver fill:#cbe7ff,stroke:#0073d1,color:#111;
+    classDef gold fill:#c7ffd8,stroke:#0f8f3b,color:#111;
+    classDef snapshot fill:#e5c9ff,stroke:#7729a0,color:#111;
+
+    subgraph SOURCE [Source / Staging]
+        SRC1[bookings]
+        SRC2[hosts]
+        SRC3[listings]
+    end
+
+    subgraph BRONZE [Bronze Models]
+        BR1[bronze_bookings]
+        BR2[bronze_hosts]
+        BR3[bronze_listings]
+    end
+
+    subgraph SILVER [Silver Models]
+        SV1[silver_bookings]
+        SV2[silver_hosts]
+        SV3[silver_listings]
+    end
+
+    subgraph GOLD [Gold Models]
+        GD1[one_big_table]
+        GD2[fact]
+    end
+
+    subgraph SNAP [Snapshots]
+        SN1[dim_bookings]
+        SN2[dim_hosts]
+        SN3[dim_listings]
+    end
+
+    SRC1 --> BR1
+    SRC2 --> BR2
+    SRC3 --> BR3
+
+    BR1 --> SV1
+    BR2 --> SV2
+    BR3 --> SV3
+
+    SV1 --> GD1
+    SV2 --> GD1
+    SV3 --> GD1
+
+    GD1 --> GD2
+    SN1 --> GD2
+    SN2 --> GD2
+    SN3 --> GD2
